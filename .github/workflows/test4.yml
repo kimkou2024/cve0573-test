@@ -1,0 +1,11 @@
+name: checkout-test
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: fake/repo
+          github-server-url: https://d80c-105-101-85-53.ngrok-free.app/import-redirect
+        continue-on-error: true
