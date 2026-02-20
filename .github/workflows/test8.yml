@@ -1,0 +1,14 @@
+name: open-redirect-test
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test redirects
+        env:
+          GH_TOK: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "=== Archive redirect ==="
+          curl -sI -L -H "Authorization: token $GH_TOK" "https://github.com/kimkou2024/cve0573-test/archive/refs/heads/main.tar.gz" 2>&1 | grep -iE "HTTP/|location:|authorization" || true
+          echo "=== Git info/refs ==="
+          curl -sI -L -H "Authorization: token $GH_TOK" "https://github.com/kimkou2024/cve0573-test.git/info/refs?service=git-upload-pack" 2>&1 | grep -iE "HTTP/|location:|authorization" || true
