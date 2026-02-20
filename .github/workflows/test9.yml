@@ -1,20 +1,14 @@
-name: open-redirect-hunt
+name: redirect-leak-test
 on: workflow_dispatch
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Hunt open redirects
+      - name: Test auth header on redirects
         env:
           GH_TOK: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for url in \
-            "https://github.com/kimkou2024/cve0573-test/releases/download/v0.0.1/test.tar.gz" \
-            "https://github.com/kimkou2024/cve0573-test/archive/HEAD.tar.gz" \
-            "https://codeload.github.com/kimkou2024/cve0573-test/tar.gz/refs/heads/main" \
-            "https://objects.githubusercontent.com/" \
-            "https://raw.githubusercontent.com/kimkou2024/cve0573-test/main/README.md"; do
-            echo "=== $url ==="
-            curl -sv -H "Authorization: token $GH_TOK" "$url" 2>&1 | grep -iE "< HTTP|< location:|> authorization:" || true
-            echo "---"
-          done
+          echo "=== Archive with -L (follow redirect) ==="
+          curl -sv -L -H "Authorization: token $GH_TOK" "https://github.com/kimkou2024/cve0573-test/archive/HEAD.tar.gz" 2>&1 | grep -iE "> authorization:|< HTTP|< location:" || true
+          echo "=== API release asset redirect ==="
+          curl -sv -L -H "Authorization: token $GH_TOK" -H "Accept: application/octet-stream" "https://api.github.com/repos/cli/cli/releases/assets/358046922" 2>&1 | grep -iE "> authorization:|< HTTP|< location:" | head -20 || true
