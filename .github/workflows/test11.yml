@@ -1,0 +1,15 @@
+name: persist-creds-leak
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - name: Fetch submodule after checkout persisted creds
+        run: |
+          echo "=== Git config (credential check) ==="
+          git config --list | grep -i "authorization\|credential\|extraheader\|helper" || true
+          echo "=== Now fetch submodule ==="
+          git submodule update --init 2>&1 || true
